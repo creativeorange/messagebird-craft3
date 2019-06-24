@@ -1,0 +1,74 @@
+{# @var craft \craft\web\twig\variables\CraftVariable #}
+{#
+/**
+ * Messagebird plugin for Craft CMS 3.x
+ *
+ * Messagebird index.twig
+ *
+ * @author    Creativeorange
+ * @copyright Copyright (c) 2019 Creativeorange
+ * @link      https://www.creativeorange.nl
+ * @package   Messagebird
+ * @since     1.0.0
+ */
+#}
+
+{% extends "_layouts/cp" %}
+{% import "_includes/forms" as forms %}
+
+{# The title of this CP section #}
+{% set title = "Notifications"|t('messagebird') %}
+
+{% set crumbs = [
+    { label: "Messagebird", url: url('messagebird') },
+] %}
+
+{# Content that should appear in the page header#}
+{% block actionButton %}
+    <a class="btn submit add icon" href="{{ url('messagebird/notifications/new') }}">{{ 'New notification' | t('messagebird') }}</a>
+{% endblock %}
+
+{# The content of the CP Section#}
+{% block content %}
+
+    <div id="nonotifications"{% if notifications %} class="hidden"{% endif %}>
+        <p>{{ "No notifications exist yet." | t('messagebird') }}</p>
+    </div>
+
+    <table id="notifications-table" class="data fullwidth collapsible">
+        <thead>
+        <th scope="col">{{ "Title" | t('messagebird') }}</th>
+        <th scope="col">{{ "Recipient" | t('messagebird') }}</th>
+        <th scope="col">{{ "Sender class" | t('messagebird') }}</th>
+        <th scope="col">{{ "Event name" | t('messagebird') }}</th>
+        <th class="thin"></th>
+        </thead>
+        <tbody>
+        {% for notification in notifications %}
+            <tr data-name="{{ notification.title }}" data-id="{{ notification.id }}">
+                <th scope="row" data-title="Title">
+                    <a href="{{ url('messagebird/notifications/' ~ notification.id) }}">
+                        {{ notification.title }}
+                    </a>
+                </th>
+                <td class="code">{{ notification.recipient }}</td>
+                <td class="code">{{ notification.senderClass }}</td>
+                <td class="code">{{ notification.eventName }}</td>
+                <td class="thin action">
+                    <a class="delete icon" title="{{ 'Delete' | t('notifications') }}" role="button"></a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+
+{% js %}
+    var adminTable = new Craft.AdminTable({
+    tableSelector: '#notifications-table',
+    noObjectsSelector: '#nonotifications',
+    newObjectBtnSelector: '#newnotificationcontainer',
+    deleteAction: 'messagebird/notifications/delete',
+    confirmDeleteMessage: '{{ "Are you sure you want to delete “{name}”?" | t('messagebird') }}'
+    });
+{% endjs %}

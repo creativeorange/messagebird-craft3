@@ -1,0 +1,44 @@
+{
+    "name": "creativeorange/messagebird-craft3",
+    "description": "Sends SMS notifications on specific events",
+    "type": "craft-plugin",
+    "version": "1.0.0",
+    "keywords": [
+        "craft",
+        "cms",
+        "craftcms",
+        "craft-plugin",
+        "messagebird"
+    ],
+    "support": {
+        "docs": "https://github.com/creativeorange/messagebird-craft3/blob/master/README.md",
+        "issues": "https://github.com/creativeorange/messagebird-craft3/issues"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Creativeorange",
+            "homepage": "https://www.creativeorange.nl"
+        }
+    ],
+    "require": {
+        "craftcms/cms": "^3.0",
+        "messagebird/php-rest-api": "^1.15"
+    },
+    "autoload": {
+        "psr-4": {
+          "creativeorange\\messagebird\\": "src/"
+        }
+    },
+    "extra": {
+        "name": "Messagebird for Craft 3",
+        "handle": "messagebird",
+        "hasCpSettings": true,
+        "hasCpSection": true,
+        "changelogUrl": "https://raw.githubusercontent.com/creativeorange/messagebird-craft3/master/CHANGELOG.md",
+        "components": {
+            "notifications": "creativeorange\\messagebird\\services\\Notifications"
+        },
+        "class": "creativeorange\\messagebird\\Messagebird"
+    }
+}

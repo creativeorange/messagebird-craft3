@@ -1,0 +1,116 @@
+{# @var craft \craft\web\twig\variables\CraftVariable #}
+{#
+/**
+ * Messagebird plugin for Craft CMS 3.x
+ *
+ * Messagebird index.twig
+ *
+ * @author    Creativeorange
+ * @copyright Copyright (c) 2019 Creativeorange
+ * @link      https://www.creativeorange.nl
+ * @package   Messagebird
+ * @since     1.0.0
+ */
+#}
+
+{% extends "_layouts/cp" %}
+{% import "_includes/forms" as forms %}
+
+{# The title of this CP section #}
+{% set title = (notification.id ? "Edit notification" : "New notification") | t('messagebird') %}
+
+{% set fullPageForm = true %}
+
+{% block content %}
+    {{ actionInput('messagebird/notifications/save') }}
+    {{ redirectInput('messagebird/notifications') }}
+
+    {% if notification.id %}<input type="hidden" name="notificationId" value="{{ notification.id }}">{% endif %}
+
+    {{ forms.textField({
+        first: true,
+        label: "Title" | t('messagebird'),
+        instructions: "What this notification will be called in the CP." | t('messagebird'),
+        id: 'title',
+        name: 'title',
+        value: notification.title,
+        errors: notification.getErrors('title'),
+        autofocus: true,
+        required: true,
+    }) }}
+
+    {% set classInput = include('messagebird/notifications/_class-autosuggest', {
+        id: 'senderClass',
+        name: 'senderClass',
+        class: 'code ltr',
+        placeholder: 'craft\\elements\\Entry',
+        value: notification.senderClass,
+        errors: notification.getErrors('senderClass')
+    }, with_context = false) %}
+    {{ forms.field({
+        label: 'Sender Class'|t('messagebird'),
+        required: true,
+        instructions: 'The class name the sender must be an instance of.'|t('messagebird'),
+        errors: notification.getErrors('senderClass')
+    }, classInput) }}
+
+    {% set eventInput = include('messagebird/notifications/_event-autosuggest', {
+        id: 'eventName',
+        name: 'eventName',
+        class: 'code ltr',
+        placeholder: 'afterSave',
+        value: notification.eventName,
+        errors: notification.getErrors('eventName')
+    }, with_context = false) %}
+    {{ forms.field({
+        label: 'Event Name'|t('notifications'),
+        required: true,
+        instructions: 'The name of the event that must be triggered.'|t('messagebird'),
+        errors: notification.getErrors('eventName')
+    }, eventInput) }}
+
+
+    {{ forms.textField({
+        first: true,
+        label: "Recipient" | t('messagebird'),
+        instructions: "Mobile number of the recipient" | t('messagebird'),
+        id: 'recipient',
+        name: 'recipient',
+        value: notification.recipient,
+        errors: notification.getErrors('recipient'),
+        required: true,
+    }) }}
+
+    {{ forms.textareaField({
+        label: 'Content'|t('messagebird'),
+        instructions: 'The message we will send. An event template will be present, set to the event that was triggered.'|t('messagebird'),
+        id: 'message',
+        name: 'message',
+        class: 'code nicetext',
+        rows: 3,
+        value: notification.message,
+        errors: notification.getErrors('message')
+    }) }}
+
+    {{ forms.lightswitchField({
+        label: 'Enable conditions',
+        id: 'enableConditional',
+        name: 'enableConditional',
+        on: notification.enableConditional,
+        toggle: 'custom-condition',
+        })
+    }}
+
+    <div id="custom-condition" class="{{ not notification.enableConditional ? 'hidden' }}">
+        {{ forms.textareaField({
+            label: 'Condition template'|t('messagebird'),
+            instructions: 'Enter a custom Twig template that outputs the payload body. An `event` variable will be present, set to the event that was triggered.'|t('messagebird'),
+            id: 'conditionTemplate',
+            name: 'conditionTemplate',
+            class: 'code nicetext',
+            rows: 10,
+            value: notification.conditionTemplate,
+            errors: notification.getErrors('conditionTemplate')
+        }) }}
+    </div>
+{% endblock %}

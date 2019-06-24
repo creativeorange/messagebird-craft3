@@ -1,0 +1,35 @@
+{% extends '_includes/forms/autosuggest' %}
+
+{% block data %}
+    {{ parent() }}
+    data.senderClassValue = null;
+    data.inputProps.onInputChange = this.myOnInputChange;
+{% endblock %}
+
+{% block methods %}
+    {{ parent() }}
+    updateSuggestions() {
+        this.suggestions = [];
+        if (this.senderClassValue) {
+            Craft.postActionRequest('messagebird/suggestions/events', {
+                senderClass: this.senderClassValue
+            }, $.proxy(function(response, textStatus) {
+                if (textStatus === 'success') {
+                    this.suggestions = [
+                        {
+                            data: response.events
+                        }
+                    ];
+                    this.onInputChange();
+                }
+            }, this));
+        }
+    },
+    myOnInputChange(text) {
+        // Has the Sender Class changed?
+        if (this.senderClassValue !== (this.senderClassValue = $('#senderClass').val())) {
+            this.updateSuggestions();
+        }
+        this.onInputChange(text);
+    },
+{% endblock %}

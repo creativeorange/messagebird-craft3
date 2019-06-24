@@ -1,0 +1,44 @@
+{# @var craft \craft\web\twig\variables\CraftVariable #}
+{#
+/**
+ * Messagebird plugin for Craft CMS 3.x
+ *
+ * Messagebird Settings.twig
+ *
+ * @author    Creativeorange
+ * @copyright Copyright (c) 2019 Creativeorange
+ * @link      https://www.creativeorange.nl
+ * @package   Messagebird
+ * @since     1.0.0
+ */
+#}
+
+{% import "_includes/forms" as forms %}
+
+{% do view.registerAssetBundle("creativeorange\\messagebird\\assetbundles\\messagebird\\MessagebirdAsset") %}
+
+{{ forms.autosuggestField({
+    label: 'API key',
+    instructions: 'You can find this in the developer dashboard: https://dashboard.messagebird.com/en/developers/access',
+    id: 'apiKey',
+    name: 'apiKey',
+    value: settings['apiKey'],
+    suggestEnvVars: true})
+}}
+
+{{ forms.autosuggestField({
+    label: 'Originator',
+    instructions: 'The name of the sender',
+    id: 'originator',
+    name: 'originator',
+    value: settings['originator'],
+    suggestEnvVars: true})
+}}
+
+{{ forms.lightswitchField({
+    label: 'Debug mode',
+    instructions: 'Enables debug mode, which gives you the ability to test the templates',
+    id: 'debugMode',
+    name: 'debugMode',
+    on: settings['debugMode'] })
+}}

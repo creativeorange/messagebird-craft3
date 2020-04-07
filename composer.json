@@ -2,7 +2,7 @@
     "name": "creativeorange/messagebird-craft3",
     "description": "Sends SMS notifications on specific events",
     "type": "craft-plugin",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "keywords": [
         "craft",
         "cms",

@@ -115,7 +115,7 @@ class Notifications extends Component
 
         $sms = new Message();
         $sms->originator = Messagebird::$plugin->getSettings()->getOriginator();
-        $sms->recipients[] = $notification->recipient;
+        $sms->recipients = array_map('trim', explode(',', $notification->recipient));
         $sms->body = $message;
         $sms->datacoding = 'unicode';
 
